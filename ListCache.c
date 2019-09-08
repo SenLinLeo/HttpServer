@@ -1,5 +1,5 @@
 #include "ListCache.h"
-#include "server.h"
+#include "MainServer.h"
 
 
 DListNode *del(DListNode *phead)

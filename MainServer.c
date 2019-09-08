@@ -1,8 +1,9 @@
 
-#include "server.h"
+#include "MainServer.h"
 #include "ListCache.h"
-#include <pthread.h>
 #include "HttpPool.h"
+
+#include <pthread.h>
 
 DListNode *oldhead = NULL;
 
