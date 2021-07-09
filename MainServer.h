@@ -44,7 +44,7 @@
 #define 	DEFAULT_DOCUMENT_ROOT   	"./"                 /* Web document root directory */
 #define 	DEFAULT_DIRECTORY_INDEX 	"index.html"         /* Directory default index file name */
 #define 	DEFAULT_LOG_PATH        	"/tmp/tmhttpd.log"   /* Access log path */
-#define     BACKLOG                   	20                   /*×î´ó¼àÌıÊı*/
+#define     BACKLOG                   	20                   /*æœ€å¤§ç›‘å¬æ•°*/
 #define     MAX_PATH                 	512
 #define     RC_SUCC                   	 0
 #define     RC_FAIL                  	-1

@@ -6,7 +6,7 @@ void pool_init(int max_thread_num)
 {
     pool = (CThread_pool *) malloc(sizeof(CThread_pool));
     pthread_mutex_init(&(pool->queue_lock), NULL);
-    pthread_cond_init(&(pool->queue_ready), NULL);  //ÓÃÀ´³õÊ¼»¯Ò»¸öÌõ¼ş±äÁ¿¡£
+    pthread_cond_init(&(pool->queue_ready), NULL);  //ç”¨æ¥åˆå§‹åŒ–ä¸€ä¸ªæ¡ä»¶å˜é‡ã€‚
     pool->queue_head = NULL;
     pool->max_thread_num = max_thread_num;
     pool->cur_queue_size = 0;
@@ -19,16 +19,16 @@ void pool_init(int max_thread_num)
         pthread_create(&(pool->threadid[i]), NULL, thread_routine, NULL);
     }
 }
-/*ÏòÏß³Ì³ØÖĞ¼ÓÈëÈÎÎñ*/
+/*å‘çº¿ç¨‹æ± ä¸­åŠ å…¥ä»»åŠ¡*/
 int pool_add_worker(void *(*process)(void *arg), void *arg)
 {
-    /*¹¹ÔìÒ»¸öĞÂÈÎÎñ*/
+    /*æ„é€ ä¸€ä¸ªæ–°ä»»åŠ¡*/
     CThread_worker *newworker = (CThread_worker *) malloc(sizeof(CThread_worker));
     newworker->process = process;
     newworker->arg = arg;
-    newworker->next = NULL;/*±ğÍüÖÃ¿Õ*/
+    newworker->next = NULL;/*åˆ«å¿˜ç½®ç©º*/
     pthread_mutex_lock(&(pool->queue_lock));
-    /*½«ÈÎÎñ¼ÓÈëµ½µÈ´ı¶ÓÁĞÖĞ*/
+    /*å°†ä»»åŠ¡åŠ å…¥åˆ°ç­‰å¾…é˜Ÿåˆ—ä¸­*/
     CThread_worker *member = pool->queue_head;
 
     if (member != NULL)
@@ -48,26 +48,26 @@ int pool_add_worker(void *(*process)(void *arg), void *arg)
     assert(pool->queue_head != NULL);
     pool->cur_queue_size++;
     pthread_mutex_unlock(&(pool->queue_lock));
-    /*ºÃÁË£¬µÈ´ı¶ÓÁĞÖĞÓĞÈÎÎñÁË£¬»½ĞÑÒ»¸öµÈ´ıÏß³Ì£»
-      ×¢ÒâÈç¹ûËùÓĞÏß³Ì¶¼ÔÚÃ¦Âµ£¬Õâ¾äÃ»ÓĞÈÎºÎ×÷ÓÃ*/
+    /*å¥½äº†ï¼Œç­‰å¾…é˜Ÿåˆ—ä¸­æœ‰ä»»åŠ¡äº†ï¼Œå”¤é†’ä¸€ä¸ªç­‰å¾…çº¿ç¨‹ï¼›
+      æ³¨æ„å¦‚æœæ‰€æœ‰çº¿ç¨‹éƒ½åœ¨å¿™ç¢Œï¼Œè¿™å¥æ²¡æœ‰ä»»ä½•ä½œç”¨*/
     pthread_cond_signal(&(pool->queue_ready));
-    //  º¯ÊıÊÇÓÃÀ´ÔÚÌõ¼şÂú×ãÊ±£¬
-    //   ¸øÕıÔÚµÈ´ıµÄ¶ÔÏó·¢ËÍĞÅÏ¢£¬±íÊ¾»½ĞÑ¸Ã±äÁ¿
+    //  å‡½æ•°æ˜¯ç”¨æ¥åœ¨æ¡ä»¶æ»¡è¶³æ—¶ï¼Œ
+    //   ç»™æ­£åœ¨ç­‰å¾…çš„å¯¹è±¡å‘é€ä¿¡æ¯ï¼Œè¡¨ç¤ºå”¤é†’è¯¥å˜é‡
     return 0;
 }
-/*Ïú»ÙÏß³Ì³Ø£¬µÈ´ı¶ÓÁĞÖĞµÄÈÎÎñ²»»áÔÙ±»Ö´ĞĞ£¬µ«ÊÇÕıÔÚÔËĞĞµÄÏß³Ì»áÒ»Ö±
-  °ÑÈÎÎñÔËĞĞÍêºóÔÙÍË³ö*/
+/*é”€æ¯çº¿ç¨‹æ± ï¼Œç­‰å¾…é˜Ÿåˆ—ä¸­çš„ä»»åŠ¡ä¸ä¼šå†è¢«æ‰§è¡Œï¼Œä½†æ˜¯æ­£åœ¨è¿è¡Œçš„çº¿ç¨‹ä¼šä¸€ç›´
+  æŠŠä»»åŠ¡è¿è¡Œå®Œåå†é€€å‡º*/
 int pool_destroy()
 {
     if (pool->shutdown)
     {
-        return -1;    /*·ÀÖ¹Á½´Îµ÷ÓÃ*/
+        return -1;    /*é˜²æ­¢ä¸¤æ¬¡è°ƒç”¨*/
     }
 
     pool->shutdown = 1;
-    /*»½ĞÑËùÓĞµÈ´ıÏß³Ì£¬Ïß³Ì³ØÒªÏú»ÙÁË*/
+    /*å”¤é†’æ‰€æœ‰ç­‰å¾…çº¿ç¨‹ï¼Œçº¿ç¨‹æ± è¦é”€æ¯äº†*/
     pthread_cond_broadcast(&(pool->queue_ready));
-    /*×èÈûµÈ´ıÏß³ÌÍË³ö£¬·ñÔò¾Í³É½©Ê¬ÁË*/
+    /*é˜»å¡ç­‰å¾…çº¿ç¨‹é€€å‡ºï¼Œå¦åˆ™å°±æˆåƒµå°¸äº†*/
     int i;
 
     for (i = 0; i < pool->max_thread_num; i++)
@@ -76,7 +76,7 @@ int pool_destroy()
     }
 
     free(pool->threadid);
-    /*Ïú»ÙµÈ´ı¶ÓÁĞ*/
+    /*é”€æ¯ç­‰å¾…é˜Ÿåˆ—*/
     CThread_worker *head = NULL;
 
     while (pool->queue_head != NULL)
@@ -86,11 +86,11 @@ int pool_destroy()
         free(head);
     }
 
-    /*Ìõ¼ş±äÁ¿ºÍ»¥³âÁ¿Ò²±ğÍüÁËÏú»Ù*/
+    /*æ¡ä»¶å˜é‡å’Œäº’æ–¥é‡ä¹Ÿåˆ«å¿˜äº†é”€æ¯*/
     pthread_mutex_destroy(&(pool->queue_lock));
     pthread_cond_destroy(&(pool->queue_ready));
     free(pool);
-    /*Ïú»ÙºóÖ¸ÕëÖÃ¿ÕÊÇ¸öºÃÏ°¹ß*/
+    /*é”€æ¯åæŒ‡é’ˆç½®ç©ºæ˜¯ä¸ªå¥½ä¹ æƒ¯*/
     pool = NULL;
     return 0;
 }
@@ -102,49 +102,49 @@ void *thread_routine(void *arg)
     {
         pthread_mutex_lock(&(pool->queue_lock));
 
-        /*Èç¹ûµÈ´ı¶ÓÁĞÎª0²¢ÇÒ²»Ïú»ÙÏß³Ì³Ø£¬Ôò´¦ÓÚ×èÈû×´Ì¬; ×¢Òâ
-          pthread_cond_waitÊÇÒ»¸öÔ­×Ó²Ù×÷£¬µÈ´ıÇ°»á½âËø£¬»½ĞÑºó»á¼ÓËø*/
+        /*å¦‚æœç­‰å¾…é˜Ÿåˆ—ä¸º0å¹¶ä¸”ä¸é”€æ¯çº¿ç¨‹æ± ï¼Œåˆ™å¤„äºé˜»å¡çŠ¶æ€; æ³¨æ„
+          pthread_cond_waitæ˜¯ä¸€ä¸ªåŸå­æ“ä½œï¼Œç­‰å¾…å‰ä¼šè§£é”ï¼Œå”¤é†’åä¼šåŠ é”*/
         while (pool->cur_queue_size == 0 && !pool->shutdown)
         {
             printf("thread 0x%x is waiting\n", (int)pthread_self());
             pthread_cond_wait(&(pool->queue_ready), &(pool->queue_lock));
         }
 
-        /*Ïß³Ì³ØÒªÏú»ÙÁË***/
+        /*çº¿ç¨‹æ± è¦é”€æ¯äº†***/
         if (pool->shutdown)
         {
-            /*Óöµ½break,continue,returnµÈÌø×ªÓï¾ä£¬Ç§Íò²»ÒªÍü¼ÇÏÈ½âËø*/
+            /*é‡åˆ°break,continue,returnç­‰è·³è½¬è¯­å¥ï¼Œåƒä¸‡ä¸è¦å¿˜è®°å…ˆè§£é”*/
             pthread_mutex_unlock(&(pool->queue_lock));
             printf("thread 0x%x will exit\n", (int)pthread_self());
             pthread_exit(NULL);
         }
 
         printf("thread 0x%x is starting to work\n", (int)pthread_self());
-        /*assertÊÇµ÷ÊÔµÄ*/
-        //ÆäÖĞ×÷ÓÃÊÇÈç¹û±í´ïÊ½Îªfalse£¬Ê×ÏÈÏòstderr´òÓ¡Ò»Ìõ´íÎóĞÅÏ¢£¬
-        //È»ºóÊ¹ÓÃabort()º¯ÊıÀ´ÖÕÖ¹³ÌĞòµÄÔËĞĞ
+        /*assertæ˜¯è°ƒè¯•çš„*/
+        //å…¶ä¸­ä½œç”¨æ˜¯å¦‚æœè¡¨è¾¾å¼ä¸ºfalseï¼Œé¦–å…ˆå‘stderræ‰“å°ä¸€æ¡é”™è¯¯ä¿¡æ¯ï¼Œ
+        //ç„¶åä½¿ç”¨abort()å‡½æ•°æ¥ç»ˆæ­¢ç¨‹åºçš„è¿è¡Œ
         assert(pool->cur_queue_size != 0);
         assert(pool->queue_head != NULL);
-        /*µÈ´ı¶ÓÁĞ³¤¶È¼õÈ¥1£¬²¢È¡³öÁ´±íÖĞµÄÍ·ÔªËØ*/
+        /*ç­‰å¾…é˜Ÿåˆ—é•¿åº¦å‡å»1ï¼Œå¹¶å–å‡ºé“¾è¡¨ä¸­çš„å¤´å…ƒç´ */
         pool->cur_queue_size--;
         CThread_worker *worker = pool->queue_head;
         pool->queue_head = worker->next;
         pthread_mutex_unlock(&(pool->queue_lock));
-        /*µ÷ÓÃ»Øµ÷º¯Êı£¬Ö´ĞĞÈÎÎñ*/
+        /*è°ƒç”¨å›è°ƒå‡½æ•°ï¼Œæ‰§è¡Œä»»åŠ¡*/
         (*(worker->process))(worker->arg);
         free(worker);
         worker = NULL;
     }
 
-    /*ÕâÒ»¾äÓ¦¸ÃÊÇ²»¿É´ïµÄ*/
+    /*è¿™ä¸€å¥åº”è¯¥æ˜¯ä¸å¯è¾¾çš„*/
     pthread_exit(NULL);
 }
 
 #if 0
 int main(int argc, char **argv)
 {
-    pool_init(3); /*Ïß³Ì³ØÖĞ×î¶àÈı¸ö»î¶¯Ïß³Ì*/
-    /*Á¬ĞøÏò³ØÖĞÍ¶Èë10¸öÈÎÎñ*/
+    pool_init(3); /*çº¿ç¨‹æ± ä¸­æœ€å¤šä¸‰ä¸ªæ´»åŠ¨çº¿ç¨‹*/
+    /*è¿ç»­å‘æ± ä¸­æŠ•å…¥10ä¸ªä»»åŠ¡*/
     int *workingnum = (int *) malloc(sizeof(int) * 10);
     int i;
 
@@ -154,9 +154,9 @@ int main(int argc, char **argv)
         pool_add_worker(myprocess, &workingnum[i]);
     }
 
-    /*µÈ´ıËùÓĞÈÎÎñÍê³É*/
+    /*ç­‰å¾…æ‰€æœ‰ä»»åŠ¡å®Œæˆ*/
     sleep(5);
-    /*Ïú»ÙÏß³Ì³Ø*/
+    /*é”€æ¯çº¿ç¨‹æ± */
     pool_destroy();
     free(workingnum);
     return 0;
