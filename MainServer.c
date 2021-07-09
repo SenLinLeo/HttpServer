@@ -91,7 +91,7 @@ int nDirOrder(char *szBuf, char *szPhysicalPath, int iDepth)
     {
         if (strncmp(dp->d_name, ".", 1) == 0)
         {
-            continue;                            /* Ìø¹ıµ±Ç°Ä¿Â¼ºÍÉÏÒ»²ãÄ¿Â¼ÒÔ¼°Òş²ØÎÄ¼ş*/
+            continue;                            /* è·³è¿‡å½“å‰ç›®å½•å’Œä¸Šä¸€å±‚ç›®å½•ä»¥åŠéšè—æ–‡ä»¶*/
         }
 
         if (strlen(szPhysicalPath) + strlen(dp->d_name) + 2 > sizeof(szName))
@@ -258,7 +258,7 @@ static void vMimeContentType(const char *name, char *ret)
     char *buf = NULL;
     dot = strrchr(name, '.');
 
-    if (NULL == dot)        // ÆäËûÀàĞÍµÄÎÄ¼ş°´text/plain´¦Àí
+    if (NULL == dot)        // å…¶ä»–ç±»å‹çš„æ–‡ä»¶æŒ‰text/plainå¤„ç†
     {
         strcpy(ret, "text/plain");
         return;
@@ -620,13 +620,13 @@ int nHttpRecv(int iSocket, char *pszRecv, int iRead, int iTime)
 
         if (iByte < 0)
         {
-            //  ±íÊ¾Ã»Êı¾İÁË
+            //  è¡¨ç¤ºæ²¡æ•°æ®äº†
             if (EAGAIN == errno || EWOULDBLOCK == errno)
             {
                 /*
                    if ((nGetTickTime() - utime) >= (iTime ))
                    {
-                       printf("»ñÈ¡ÃèÊö·û(%d)Êı¾İ³¬Ê±, (%d)(%s)\n", iSocket, errno,
+                       printf("è·å–æè¿°ç¬¦(%d)æ•°æ®è¶…æ—¶, (%d)(%s)\n", iSocket, errno,
                               strerror(errno));
                        return iRecv;
                    }
@@ -642,16 +642,16 @@ int nHttpRecv(int iSocket, char *pszRecv, int iRead, int iTime)
             }
             else
             {
-                printf("»ñÈ¡ÃèÊö·û(%d)(%d)Êı¾İÊ§°Ü, (%d)(%d)(%s)\n", iByte, iRead, iTime,
+                printf("è·å–æè¿°ç¬¦(%d)(%d)æ•°æ®å¤±è´¥, (%d)(%d)(%s)\n", iByte, iRead, iTime,
                        errno, strerror(errno));
                 return RC_FAIL;
             }
         }
-        else if (NULL != strstr(pszRecv, "\r\n\r\n"))    // Ä¬ÈÏÎŞÊµÌåµÄHTTP±¨ÎÄ
+        else if (NULL != strstr(pszRecv, "\r\n\r\n"))    // é»˜è®¤æ— å®ä½“çš„HTTPæŠ¥æ–‡
         {
             return iRecv;
         }
-        else if (iByte == 0)    //  ÈÏÎªÊÇ¹Ø±ÕÁËÁ¬½Ó
+        else if (iByte == 0)    //  è®¤ä¸ºæ˜¯å…³é—­äº†è¿æ¥
         {
             return iRecv;
         }
@@ -734,8 +734,8 @@ int nSocketCreate()
 {
     int iRet = 0;
     int iSockFd = -1;
-    struct sockaddr_in stMyAddr;                    /*±¾·½µØÖ·ĞÅÏ¢½á¹¹Ìå£¬ÏÂÃæÓĞ¾ßÌåµÄÊôĞÔ¸³Öµ*/
-    iSockFd = socket(AF_INET, SOCK_STREAM, 0);    /*½¨Á¢socket  */
+    struct sockaddr_in stMyAddr;                    /*æœ¬æ–¹åœ°å€ä¿¡æ¯ç»“æ„ä½“ï¼Œä¸‹é¢æœ‰å…·ä½“çš„å±æ€§èµ‹å€¼*/
+    iSockFd = socket(AF_INET, SOCK_STREAM, 0);    /*å»ºç«‹socket  */
 
     if (iSockFd == -1)
     {
@@ -743,19 +743,19 @@ int nSocketCreate()
         return -1;
     }
 
-    stMyAddr.sin_family = AF_INET;                  /*¸ÃÊôĞÔ±íÊ¾½ÓÊÕ±¾»ú»òÆäËû»úÆ÷´«Êä*/
-    stMyAddr.sin_port = htons(PORT);                /*¶Ë¿ÚºÅ*/
-    stMyAddr.sin_addr.s_addr = htonl(INADDR_ANY);   /*IP£¬À¨ºÅÄÚÈİ±íÊ¾±¾»úIP*/
-    bzero(&(stMyAddr.sin_zero), 8);                 /*½«ÆäËûÊôĞÔÖÃ0*/
+    stMyAddr.sin_family = AF_INET;                  /*è¯¥å±æ€§è¡¨ç¤ºæ¥æ”¶æœ¬æœºæˆ–å…¶ä»–æœºå™¨ä¼ è¾“*/
+    stMyAddr.sin_port = htons(PORT);                /*ç«¯å£å·*/
+    stMyAddr.sin_addr.s_addr = htonl(INADDR_ANY);   /*IPï¼Œæ‹¬å·å†…å®¹è¡¨ç¤ºæœ¬æœºIP*/
+    bzero(&(stMyAddr.sin_zero), 8);                 /*å°†å…¶ä»–å±æ€§ç½®0*/
 
     if (bind(iSockFd, (struct sockaddr *)&stMyAddr, sizeof(struct sockaddr)) < 0)
     {
-        /*°ó¶¨µØÖ·½á¹¹ÌåºÍsocket*/
+        /*ç»‘å®šåœ°å€ç»“æ„ä½“å’Œsocket*/
         perror("bind error");
         exit(1);
     }
 
-    if (RC_SUCC != listen(iSockFd, BACKLOG))                                                       /*¿ªÆô¼àÌı £¬µÚ¶ş¸ö²ÎÊıÊÇ×î´ó¼àÌıÊı*/
+    if (RC_SUCC != listen(iSockFd, BACKLOG))                                                       /*å¼€å¯ç›‘å¬ ï¼Œç¬¬äºŒä¸ªå‚æ•°æ˜¯æœ€å¤§ç›‘å¬æ•°*/
     {
         perror("listen");
         exit(1);
@@ -776,8 +776,8 @@ int nSocketCreate()
 int nFdAdd(int iEpfd, int iListfd, struct epoll_event *stEvent, int flag)
 {
     int iRet = -1;
-    /*EPOLLIN £º±íÊ¾¶ÔÓ¦µÄÎÄ¼şÃèÊö·û¿ÉÒÔ¶Á
-      EPOLLET £º½«EPOLLÉèÎª±ßÔµ´¥·¢(Edge Triggered)Ä£Ê½
+    /*EPOLLIN ï¼šè¡¨ç¤ºå¯¹åº”çš„æ–‡ä»¶æè¿°ç¬¦å¯ä»¥è¯»
+      EPOLLET ï¼šå°†EPOLLè®¾ä¸ºè¾¹ç¼˜è§¦å‘(Edge Triggered)æ¨¡å¼
     */
     stEvent->events = EPOLLIN | EPOLLET;
 
@@ -857,7 +857,7 @@ int nAnalysisBuf(int iEpfd, struct epoll_event *retevent, int iListfd)
     int  iLen = 0;
     int iRet = -1;
     int  i = 0;
-    struct sockaddr_in stTheirAddr;                 /*¶Ô·½µØÖ·ĞÅÏ¢*/
+    struct sockaddr_in stTheirAddr;                 /*å¯¹æ–¹åœ°å€ä¿¡æ¯*/
     bzero(&stTheirAddr, sizeof(stTheirAddr));
     oldhead = nCreatHead(oldhead);
 
