@@ -19,6 +19,7 @@ void pool_init(int max_thread_num)
         pthread_create(&(pool->threadid[i]), NULL, thread_routine, NULL);
     }
 }
+
 /*向线程池中加入任务*/
 int pool_add_worker(void *(*process)(void *arg), void *arg)
 {
@@ -55,6 +56,7 @@ int pool_add_worker(void *(*process)(void *arg), void *arg)
     //   给正在等待的对象发送信息，表示唤醒该变量
     return 0;
 }
+
 /*销毁线程池，等待队列中的任务不会再被执行，但是正在运行的线程会一直
   把任务运行完后再退出*/
 int pool_destroy()
@@ -94,6 +96,7 @@ int pool_destroy()
     pool = NULL;
     return 0;
 }
+
 void *thread_routine(void *arg)
 {
     printf("starting thread 0x%x\n", (int)pthread_self());

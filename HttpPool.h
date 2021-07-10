@@ -10,30 +10,30 @@
 #include <sys/socket.h>
 
 /*
-*Ïß³Ì³ØÀïËùÓĞÔËĞĞºÍµÈ´ıµÄÈÎÎñ¶¼ÊÇÒ»¸öCThread_worker
-*ÓÉÓÚËùÓĞÈÎÎñ¶¼ÔÚÁ´±íÀï£¬ËùÒÔÊÇÒ»¸öÁ´±í½á¹¹
+*çº¿ç¨‹æ± é‡Œæ‰€æœ‰è¿è¡Œå’Œç­‰å¾…çš„ä»»åŠ¡éƒ½æ˜¯ä¸€ä¸ªCThread_worker
+*ç”±äºæ‰€æœ‰ä»»åŠ¡éƒ½åœ¨é“¾è¡¨é‡Œï¼Œæ‰€ä»¥æ˜¯ä¸€ä¸ªé“¾è¡¨ç»“æ„
 */
 typedef struct worker
 { 
-    /*»Øµ÷º¯Êı£¬ÈÎÎñÔËĞĞÊ±»áµ÷ÓÃ´Ëº¯Êı£¬×¢ÒâÒ²¿ÉÉùÃ÷³ÉÆäËüĞÎÊ½*/
+    /*å›è°ƒå‡½æ•°ï¼Œä»»åŠ¡è¿è¡Œæ—¶ä¼šè°ƒç”¨æ­¤å‡½æ•°ï¼Œæ³¨æ„ä¹Ÿå¯å£°æ˜æˆå…¶å®ƒå½¢å¼*/
     void *(*process) (void *arg);
-    void *arg;/*»Øµ÷º¯ÊıµÄ²ÎÊı*/
+    void *arg;/*å›è°ƒå‡½æ•°çš„å‚æ•°*/
     struct worker *next;
 
 } CThread_worker;
-/*Ïß³Ì³Ø½á¹¹*/
+/*çº¿ç¨‹æ± ç»“æ„*/
 typedef struct
 {
     pthread_mutex_t queue_lock;
     pthread_cond_t queue_ready;
-	/*Á´±í½á¹¹£¬Ïß³Ì³ØÖĞËùÓĞµÈ´ıÈÎÎñ*/
+	/*é“¾è¡¨ç»“æ„ï¼Œçº¿ç¨‹æ± ä¸­æ‰€æœ‰ç­‰å¾…ä»»åŠ¡*/
     CThread_worker *queue_head;
-    /*ÊÇ·ñÏú»ÙÏß³Ì³Ø*/
+    /*æ˜¯å¦é”€æ¯çº¿ç¨‹æ± */
     int shutdown;
     pthread_t *threadid;
-    /*Ïß³Ì³ØÖĞÔÊĞíµÄ»î¶¯Ïß³ÌÊıÄ¿*/
+    /*çº¿ç¨‹æ± ä¸­å…è®¸çš„æ´»åŠ¨çº¿ç¨‹æ•°ç›®*/
     int max_thread_num;
-    /*µ±Ç°µÈ´ı¶ÓÁĞµÄÈÎÎñÊıÄ¿*/
+    /*å½“å‰ç­‰å¾…é˜Ÿåˆ—çš„ä»»åŠ¡æ•°ç›®*/
     int cur_queue_size;
 
 } CThread_pool;
@@ -46,7 +46,5 @@ extern int pool_destroy ();
 extern void * thread_routine (void *arg);
 
 //  extern pthread_mutex_t mutex;
-
-
 
 #endif

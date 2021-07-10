@@ -1,7 +1,6 @@
 #include "ListCache.h"
 #include "MainServer.h"
 
-
 DListNode *del(DListNode *phead)
 {
     DListNode *find = phead;
@@ -88,7 +87,7 @@ DListNode *nAddCache(DListNode *phead, TConn *pstConn, long lSrcTime, int iSock)
 
 DListNode  *search(DListNode *phead, TConn *pstConn, long lNewTime)
 {
-    // printf("已经进入链表搜索 %d\n", lNewTime);
+    // printf("宸茬粡杩涘叆閾捐〃鎼滅储 %d\n", lNewTime);
     DListNode *find = phead->next;
     DListNode *tmp = NULL;
     int flag = 0;
@@ -106,7 +105,7 @@ DListNode  *search(DListNode *phead, TConn *pstConn, long lNewTime)
         if (((lNewTime - find->lCurrTime) > 10) && (find -> lCurrTime > 0) && (lNewTime > 0))
         {
             tmp->next = find->next;
-            printf("删除节点:%d\n", find->iSockfd);
+            printf("鍒犻櫎鑺傜偣:%d\n", find->iSockfd);
             close(find->iSockfd);
             free(find);
             flag = 1;

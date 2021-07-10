@@ -1,5 +1,5 @@
-#ifndef _server_h_
-#define _server_h_
+#ifndef _SERVER_H_
+#define _SERVER_H_
 
 #include <unistd.h>
 #include <stdlib.h>
@@ -25,10 +25,7 @@
 #include <netinet/tcp.h>
 #include <arpa/inet.h>
 
-// #define _GNU_SOURCE
 #include <getopt.h>
-
-
 
 /* constant define */
 #define SERVER_NAME             "httpd_lisenlin/1.0.0"
@@ -48,8 +45,6 @@
 #define     MAX_PATH                 	512
 #define     RC_SUCC                   	 0
 #define     RC_FAIL                  	-1
-
-
 
 /* data struct define */
 struct st_request_info
