@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <pthread.h>
 #include <assert.h>
-#include <sys/types.h>          /* See NOTES */
+#include <sys/types.h>          
 #include <sys/socket.h>
 
 /*

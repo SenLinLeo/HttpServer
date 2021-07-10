@@ -1,6 +1,6 @@
-#include "MainServer.h"
-#include "ListCache.h"
-#include "HttpPool.h"
+#include "server.h"
+#include "list_cache.h"
+#include "http_pool.h"
 
 #include <pthread.h>
 
